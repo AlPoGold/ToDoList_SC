@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AddingNewTask">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/adding_new_task"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/etNewtask"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/insert_your_task"
+        android:inputType="text"
+        android:textSize="18sp" />
+
+    <RadioGroup
+        android:id="@+id/rgPriority"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+            <RadioButton
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:padding="16dp"
+                android:id="@+id/rbLowPriority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FF00"
+                android:text="@string/low_priority" />
+
+            <RadioButton
+                android:layout_weight="1"
+                android:id="@+id/rbMediumPriority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FFD700"
+                android:textAlignment="center"
+                android:text="@string/medium_priority" />
+
+            <RadioButton
+                android:layout_weight="1"
+                android:id="@+id/rbHighPriority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#F44336"
+                android:textAlignment="center"
+                android:text="@string/high_priority" />
+        </LinearLayout>
+
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnSaveNewtask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/saveBtnText" />
+
+</LinearLayout>

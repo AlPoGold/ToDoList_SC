@@ -2,4 +2,11 @@
     <string name="app_name">ToDoList</string>
     <string name="descr_list_task">List of tasks</string>
     <string name="descr_adding_new_task">adding new task</string>
+    <string name="insert_your_task">Insert your task</string>
+    <string name="saveBtnText">SAVE</string>
+    <string name="low_priority">Low</string>
+    <string name="medium_priority">Medium</string>
+    <string name="high_priority">High</string>
+    <string name="adding_new_task">Adding new task</string>
+    <string name="error_no_input_new_task">Please, enter text of new task</string>
 </resources>

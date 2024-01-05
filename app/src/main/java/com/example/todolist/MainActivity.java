@@ -2,6 +2,7 @@ package com.example.todolist;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         colorPriority.put(0, "#00FF00");
         colorPriority.put(1, "#FFD700");
-        colorPriority.put(2, "#FF0000");
+        colorPriority.put(2, "#F44336");
         for (int i = 0; i < 20; i++) {
             Random random = new Random();
             int rNum = random.nextInt(3);
@@ -40,6 +41,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         showTasks();
+
+        addNewTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = AddingNewTask.newIntent(MainActivity.this);
+                startActivity(intent);
+            }
+        });
     }
 
     private void showTasks() {
