@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,8 @@ public class AddingNewTask extends AppCompatActivity {
 
     private String textTask;
     private int priorityId;
+
+    private DataBaseTasks baseTasks = DataBaseTasks.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +46,19 @@ public class AddingNewTask extends AppCompatActivity {
         btnSaveNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textTask = getTextNewTask();
-
+                saveTask();
             }
         });
+    }
+
+    private void saveTask() {
+        textTask = getTextNewTask();
+        priorityId = getPriorityInt();
+        int id = baseTasks.getTasks().size();
+        Task task = new Task(id, textTask, priorityId);
+        baseTasks.add(task);
+        Log.d("NEW_TASK", task.toString());
+        finish();
     }
 
     private int getPriorityInt() {

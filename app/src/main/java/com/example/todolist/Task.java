@@ -22,4 +22,13 @@ public class Task {
         this.text = text;
         this.priority = priority;
     }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id:" + id +
+                ", text:'" + text  +
+                ", priority:" + priority +
+                '}';
+    }
 }

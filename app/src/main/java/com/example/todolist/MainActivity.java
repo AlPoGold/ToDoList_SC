@@ -5,24 +5,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private LinearLayout linearLayoutTasks;
     private FloatingActionButton addNewTask;
 
-    private ArrayList<Task> tasksExample = new ArrayList<>();
+    private DataBaseTasks basetasks = DataBaseTasks.getInstance();
     private HashMap<Integer, String> colorPriority = new HashMap<>();
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showTasks();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +38,7 @@ public class MainActivity extends AppCompatActivity {
         colorPriority.put(0, "#00FF00");
         colorPriority.put(1, "#FFD700");
         colorPriority.put(2, "#F44336");
-        for (int i = 0; i < 20; i++) {
-            Random random = new Random();
-            int rNum = random.nextInt(3);
-            Task task = new Task(i, i+":Task", rNum);
-            tasksExample.add(task);
-        }
 
-        showTasks();
 
         addNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,13 +50,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showTasks() {
-        for (Task task: tasksExample
+        linearLayoutTasks.removeAllViews();
+        Log.d("TASK_BANK", basetasks.toString());
+        for (Task task: basetasks.getTasks()
              ) {
             View view = getLayoutInflater().inflate(
                     R.layout.task_item,
                     linearLayoutTasks,
                     false
             );
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    basetasks.remove(task.getId());
+                    showTasks();
+                }
+            });
 
             TextView tvTask = view.findViewById(R.id.task_item);
             tvTask.setText(task.getText());
