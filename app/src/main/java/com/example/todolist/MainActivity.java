@@ -1,6 +1,8 @@
 package com.example.todolist;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,11 +18,13 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    private LinearLayout linearLayoutTasks;
+    private RecyclerView recyclerView;
     private FloatingActionButton addNewTask;
+    private TaskAdapter taskAdapter;
 
     private DataBaseTasks basetasks = DataBaseTasks.getInstance();
-    private HashMap<Integer, String> colorPriority = new HashMap<>();
+    public static  HashMap<Integer, String> colorPriority = new HashMap<>();
+
 
 
     @Override
@@ -35,9 +39,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initViews();
 
+
         colorPriority.put(0, "#00FF00");
         colorPriority.put(1, "#FFD700");
         colorPriority.put(2, "#F44336");
+
+
+
+        taskAdapter = new TaskAdapter();
+        recyclerView.setAdapter(taskAdapter);
+
+
+
+
+
+
 
 
         addNewTask.setOnClickListener(new View.OnClickListener() {
@@ -50,36 +66,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showTasks() {
-        linearLayoutTasks.removeAllViews();
-        Log.d("TASK_BANK", basetasks.toString());
-        for (Task task: basetasks.getTasks()
-             ) {
-            View view = getLayoutInflater().inflate(
-                    R.layout.task_item,
-                    linearLayoutTasks,
-                    false
-            );
+        taskAdapter.setTasks(basetasks.getTasks());
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    basetasks.remove(task.getId());
-                    showTasks();
-                }
-            });
+//            view.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    basetasks.remove(task.getId());
+//                    showTasks();
+//                }
+//            });
 
-            TextView tvTask = view.findViewById(R.id.task_item);
-            tvTask.setText(task.getText());
-            int colorResId = task.getPriority();
-            int parsedColor = Color.parseColor(colorPriority.get(colorResId));
-            tvTask.setBackgroundColor(parsedColor);
 
-            linearLayoutTasks.addView(view);
-        }
+
     }
 
     private void initViews() {
-        linearLayoutTasks = findViewById(R.id.linearLayoutTasks);
+        recyclerView = findViewById(R.id.recyclerViewTasks);
         addNewTask = findViewById(R.id.btnAddNewTask);
     }
 
