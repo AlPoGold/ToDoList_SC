@@ -1,6 +1,8 @@
 package com.example.todolist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,14 +50,37 @@ public class MainActivity extends AppCompatActivity {
 
         taskAdapter = new TaskAdapter();
         recyclerView.setAdapter(taskAdapter);
+        taskAdapter.setOntaskClickListener(new TaskAdapter.OntaskClickListener() {
+            @Override
+            public void onTaskClick(Task task) {
+//                basetasks.remove(task.getId());
+//                showTasks();
+            }
+        });
 
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(
+                        0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                Task task = taskAdapter.getTasks().get(position);
+                basetasks.remove(task.getId());
+                showTasks();
+            }
+        });
 
 
-
-
-
-
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         addNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

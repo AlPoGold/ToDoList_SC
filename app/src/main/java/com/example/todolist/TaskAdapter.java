@@ -14,7 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+    public ArrayList<Task> getTasks() {
+        return new ArrayList<>(tasks);
+    }
+
     ArrayList<Task> tasks = new ArrayList<>();
+
+    public void setOntaskClickListener(OntaskClickListener ontaskClickListener) {
+        this.ontaskClickListener = ontaskClickListener;
+    }
+
+    private OntaskClickListener ontaskClickListener;
 
     public void setTasks(ArrayList<Task> tasks) {
         this.tasks = tasks;
@@ -40,6 +50,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         int colorResId = task.getPriority();
         int parsedColor = Color.parseColor(colorPriority.get(colorResId));
         viewHolder.textViewTask.setBackgroundColor(parsedColor);
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ontaskClickListener!=null) {
+                    ontaskClickListener.onTaskClick(task);
+                }
+            }
+        });
 
     }
 
@@ -56,5 +74,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             super(itemView);
             textViewTask = itemView.findViewById(R.id.task_item);
         }
+    }
+
+    interface OntaskClickListener{
+        void onTaskClick(Task task);
     }
 }
