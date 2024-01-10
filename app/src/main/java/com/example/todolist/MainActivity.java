@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton addNewTask;
     private TaskAdapter taskAdapter;
 
-    private DataBaseTasks basetasks = DataBaseTasks.getInstance();
+    private TaskDataBase taskDataBase;
     public static  HashMap<Integer, String> colorPriority = new HashMap<>();
 
 
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
-
+        taskDataBase = TaskDataBase.getInstance(getApplication());
 
         colorPriority.put(0, "#00FF00");
         colorPriority.put(1, "#FFD700");
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Task task = taskAdapter.getTasks().get(position);
-                basetasks.remove(task.getId());
+                taskDataBase.tasksDao().removeTask(task.getId());
                 showTasks();
             }
         });
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showTasks() {
-        taskAdapter.setTasks(basetasks.getTasks());
+        taskAdapter.setTasks(taskDataBase.tasksDao().getTasks());
 
 //            view.setOnClickListener(new View.OnClickListener() {
 //                @Override

@@ -27,6 +27,7 @@ public class AddingNewTask extends AppCompatActivity {
     private int priorityId;
 
     private DataBaseTasks baseTasks = DataBaseTasks.getInstance();
+    private TaskDataBase taskDataBase = TaskDataBase.getInstance(getApplication());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +37,6 @@ public class AddingNewTask extends AppCompatActivity {
 
         lowPriority.setChecked(true);
 
-        priority.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                priorityId = getPriorityInt();
-            }
-        });
 
         btnSaveNewTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,17 +49,16 @@ public class AddingNewTask extends AppCompatActivity {
     private void saveTask() {
         textTask = getTextNewTask();
         priorityId = getPriorityInt();
-        int id = baseTasks.getTasks().size();
-        Task task = new Task(id, textTask, priorityId);
-        baseTasks.add(task);
+        Task task = new Task( textTask, priorityId);
+        taskDataBase.tasksDao().addTask(task);
         Log.d("NEW_TASK", task.toString());
         finish();
     }
 
     private int getPriorityInt() {
-        if(lowPriority.isChecked()) return 0;
-        else if (mediumPriority.isChecked()) {
-            return 1;
+        if(mediumPriority.isChecked()) return 1;
+        else if (lowPriority.isChecked()) {
+            return 0;
         }else return 2;
     }
 

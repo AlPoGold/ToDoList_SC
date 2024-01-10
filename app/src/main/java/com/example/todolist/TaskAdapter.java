@@ -12,13 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     public ArrayList<Task> getTasks() {
         return new ArrayList<>(tasks);
     }
 
-    ArrayList<Task> tasks = new ArrayList<>();
+    List<Task> tasks = new ArrayList<>();
 
     public void setOntaskClickListener(OntaskClickListener ontaskClickListener) {
         this.ontaskClickListener = ontaskClickListener;
@@ -26,7 +27,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     private OntaskClickListener ontaskClickListener;
 
-    public void setTasks(ArrayList<Task> tasks) {
+    public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
         notifyDataSetChanged();
     }
