@@ -1,5 +1,6 @@
 package com.example.todolist;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public interface TaskDao {
     @Query("SELECT * FROM tasks")
-    List<Task> getTasks();
+    LiveData<List<Task>> getTasks();
     @Insert(onConflict= OnConflictStrategy.REPLACE)
     void addTask(Task task);
 

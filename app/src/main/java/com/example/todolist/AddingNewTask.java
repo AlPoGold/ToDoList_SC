@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,8 @@ public class AddingNewTask extends AppCompatActivity {
 
     private DataBaseTasks baseTasks = DataBaseTasks.getInstance();
     private TaskDataBase taskDataBase = TaskDataBase.getInstance(getApplication());
+
+    private Handler handler = new Handler(Looper.getMainLooper());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +54,21 @@ public class AddingNewTask extends AppCompatActivity {
         textTask = getTextNewTask();
         priorityId = getPriorityInt();
         Task task = new Task( textTask, priorityId);
-        taskDataBase.tasksDao().addTask(task);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                taskDataBase.tasksDao().addTask(task);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                });
+
+            }
+        });
+        thread.start();
+
         Log.d("NEW_TASK", task.toString());
         finish();
     }

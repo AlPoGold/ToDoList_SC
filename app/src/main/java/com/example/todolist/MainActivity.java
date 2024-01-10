@@ -2,6 +2,7 @@ package com.example.todolist;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,13 +31,17 @@ public class MainActivity extends AppCompatActivity {
     private TaskDataBase taskDataBase;
     public static  HashMap<Integer, String> colorPriority = new HashMap<>();
 
+//    private Handler handler = new Handler(Looper.getMainLooper());
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        showTasks();
-    }
+
+
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        showTasks();
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,15 @@ public class MainActivity extends AppCompatActivity {
 
         taskAdapter = new TaskAdapter();
         recyclerView.setAdapter(taskAdapter);
+        taskDataBase.tasksDao().getTasks().observe(
+                this,
+                new Observer<List<Task>>() {
+                    @Override
+                    public void onChanged(List<Task> tasks) {
+                        taskAdapter.setTasks(tasks);
+                    }
+                }
+        );
         taskAdapter.setOntaskClickListener(new TaskAdapter.OntaskClickListener() {
             @Override
             public void onTaskClick(Task task) {
@@ -74,8 +91,22 @@ public class MainActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Task task = taskAdapter.getTasks().get(position);
-                taskDataBase.tasksDao().removeTask(task.getId());
-                showTasks();
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        taskDataBase.tasksDao().removeTask(task.getId());
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showTasks();
+//                            }
+//                        });
+                    }
+                });
+                thread.start();
+
+
+
             }
         });
 
@@ -90,20 +121,34 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void showTasks() {
-        taskAdapter.setTasks(taskDataBase.tasksDao().getTasks());
-
-//            view.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    basetasks.remove(task.getId());
-//                    showTasks();
-//                }
-//            });
-
-
-
-    }
+//    private void showTasks() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                List<Task> tasks = taskDataBase.tasksDao().getTasks();
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        taskAdapter.setTasks(tasks);
+//                    }
+//                });
+//
+//            }
+//        });
+//        thread.start();
+//
+//
+////            view.setOnClickListener(new View.OnClickListener() {
+////                @Override
+////                public void onClick(View v) {
+////                    basetasks.remove(task.getId());
+////                    showTasks();
+////                }
+////            });
+//
+//
+//
+//    }
 
     private void initViews() {
         recyclerView = findViewById(R.id.recyclerViewTasks);
