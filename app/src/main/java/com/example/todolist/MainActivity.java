@@ -3,6 +3,7 @@ package com.example.todolist;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
-        viewModel = new MainViewModel(getApplication());
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         colorPriority.put(0, "#00FF00");
         colorPriority.put(1, "#FFD700");
@@ -59,6 +61,17 @@ public class MainActivity extends AppCompatActivity {
 
         taskAdapter = new TaskAdapter();
         recyclerView.setAdapter(taskAdapter);
+        viewModel.getCount().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer count) {
+                Toast.makeText(
+                        MainActivity.this,
+                        String.valueOf(count),
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            }
+        });
         viewModel.getNotes().observe(
                 this,
                 new Observer<List<Task>>() {
@@ -71,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
         taskAdapter.setOntaskClickListener(new TaskAdapter.OntaskClickListener() {
             @Override
             public void onTaskClick(Task task) {
+                viewModel.showCount();
 //                basetasks.remove(task.getId());
 //                showTasks();
+
             }
         });
 

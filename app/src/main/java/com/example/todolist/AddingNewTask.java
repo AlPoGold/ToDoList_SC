@@ -1,6 +1,8 @@
 package com.example.todolist;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,17 +30,25 @@ public class AddingNewTask extends AppCompatActivity {
     private String textTask;
     private int priorityId;
 
-    private DataBaseTasks baseTasks = DataBaseTasks.getInstance();
-    private TaskDataBase taskDataBase = TaskDataBase.getInstance(getApplication());
+    private  AddTaskViewModel viewModel;
 
-    private Handler handler = new Handler(Looper.getMainLooper());
+//    private DataBaseTasks baseTasks = DataBaseTasks.getInstance();
+//    private TaskDataBase taskDataBase = TaskDataBase.getInstance(getApplication());
+//
+//    private Handler handler = new Handler(Looper.getMainLooper());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adding_new_task);
         initViews();
 
-
+        viewModel = new ViewModelProvider(this).get(AddTaskViewModel.class);
+        viewModel.getCloseActivity().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean closeActivity) {
+                if(closeActivity) finish();
+            }
+        });
         lowPriority.setChecked(true);
 
 
@@ -54,20 +64,22 @@ public class AddingNewTask extends AppCompatActivity {
         textTask = getTextNewTask();
         priorityId = getPriorityInt();
         Task task = new Task( textTask, priorityId);
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                taskDataBase.tasksDao().addTask(task);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                });
+        viewModel.saveTask(task);
 
-            }
-        });
-        thread.start();
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                taskDataBase.tasksDao().addTask(task);
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        finish();
+//                    }
+//                });
+//
+//            }
+//        });
+//        thread.start();
 
         Log.d("NEW_TASK", task.toString());
         finish();
