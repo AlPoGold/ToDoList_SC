@@ -28,8 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton addNewTask;
     private TaskAdapter taskAdapter;
 
-    private TaskDataBase taskDataBase;
+//    private TaskDataBase taskDataBase;
     public static  HashMap<Integer, String> colorPriority = new HashMap<>();
+    private MainViewModel viewModel;
 
 //    private Handler handler = new Handler(Looper.getMainLooper());
 
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
-        taskDataBase = TaskDataBase.getInstance(getApplication());
+        viewModel = new MainViewModel(getApplication());
 
         colorPriority.put(0, "#00FF00");
         colorPriority.put(1, "#FFD700");
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         taskAdapter = new TaskAdapter();
         recyclerView.setAdapter(taskAdapter);
-        taskDataBase.tasksDao().getTasks().observe(
+        viewModel.getNotes().observe(
                 this,
                 new Observer<List<Task>>() {
                     @Override
@@ -94,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        taskDataBase.tasksDao().removeTask(task.getId());
+                        viewModel.remove(task);
+//                        taskDataBase.tasksDao().removeTask(task.getId());
 //                        handler.post(new Runnable() {
 //                            @Override
 //                            public void run() {
