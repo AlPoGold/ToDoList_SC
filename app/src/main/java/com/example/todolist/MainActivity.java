@@ -40,11 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        showTasks();
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.refreshList();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,20 +107,21 @@ public class MainActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Task task = taskAdapter.getTasks().get(position);
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewModel.remove(task);
-//                        taskDataBase.tasksDao().removeTask(task.getId());
-//                        handler.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                showTasks();
-//                            }
-//                        });
-                    }
-                });
-                thread.start();
+                viewModel.remove(task);
+//                Thread thread = new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        viewModel.remove(task);
+////                        taskDataBase.tasksDao().removeTask(task.getId());
+////                        handler.post(new Runnable() {
+////                            @Override
+////                            public void run() {
+////                                showTasks();
+////                            }
+////                        });
+//                    }
+//                });
+//                thread.start();
 
 
 
