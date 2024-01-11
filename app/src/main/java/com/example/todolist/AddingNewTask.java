@@ -66,23 +66,7 @@ public class AddingNewTask extends AppCompatActivity {
         Task task = new Task( textTask, priorityId);
         viewModel.saveTask(task);
 
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                taskDataBase.tasksDao().addTask(task);
-//                handler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        finish();
-//                    }
-//                });
-//
-//            }
-//        });
-//        thread.start();
-
         Log.d("NEW_TASK", task.toString());
-        finish();
     }
 
     private int getPriorityInt() {

@@ -36,31 +36,20 @@ public class AddTaskViewModel extends AndroidViewModel {
         taskDataBase = TaskDataBase.getInstance(getApplication());
     }
 
-    public void saveTask(Task task){
+    public void saveTask(Task task) {
 
         disposable = taskDataBase.tasksDao().addTask(task)
-                        .subscribeOn(Schedulers.io())
-                        .delay(5, TimeUnit.SECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action() {
-            @Override
-            public void run() throws Throwable {
-                Log.d("adding new task", "subscribe");
-                closeActivity.postValue(true);
-            }
-        });
+                .subscribeOn(Schedulers.io())
+                .delay(5, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Throwable {
+                        Log.d("adding new task", "subscribe");
+                        closeActivity.postValue(true);
+                    }
+                });
         compositeDisposable.add(disposable);
-
-
-//
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                taskDataBase.tasksDao().addTask(task);
-//                closeActivity.postValue(true);
-//            }
-//        });
-//        thread.start();
     }
 
     @Override

@@ -43,7 +43,12 @@ public class MainViewModel extends AndroidViewModel {
                 .subscribe(new Consumer<List<Task>>() {
                     @Override
                     public void accept(List<Task> tasksFROMdb) throws Throwable {
-                            tasks.setValue(tasksFROMdb);
+                        tasks.setValue(tasksFROMdb);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Throwable {
+                        Log.d("data_info", "error refresh list");
                     }
                 });
     }
@@ -58,19 +63,6 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void remove(Task task){
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                taskDataBase.tasksDao().removeTask(task.getId());
-////                        handler.post(new Runnable() {
-////                            @Override
-////                            public void run() {
-////                                showTasks();
-////                            }
-////                        });
-//            }
-//        });
-//        thread.start();
         disposable = taskDataBase.tasksDao().removeTask(task.getId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -79,6 +71,11 @@ public class MainViewModel extends AndroidViewModel {
                     public void run() throws Throwable {
                         Log.d("delete_task", "task was deleted");
                         refreshList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Throwable {
+                        Log.d("error", "smth gone wrong");
                     }
                 });
         compositeDisposable.add(disposable);
